@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Permisos necesarios para la aplicación -->
+    <!-- Permiso para acceder al estado de la red -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Permiso para Internet (sincronización de datos) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Permiso para recibir notificación de inicio del sistema -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Permiso para ejecutar servicios en primer plano -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <!-- Permiso para mostrar notificaciones (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Permiso personalizado para acceso de lectura al Content Provider -->
+    <permission
+        android:name="com.example.veterinaria.provider.READ_PERMISSION"
+        android:label="Leer datos de veterinaria"
+        android:description="Permite leer información de mascotas y dueños"
+        android:protectionLevel="normal" />
+
+    <!-- Permiso personalizado para acceso de escritura al Content Provider -->
+    <permission
+        android:name="com.example.veterinaria.provider.WRITE_PERMISSION"
+        android:label="Escribir datos de veterinaria"
+        android:description="Permite modificar información de mascotas y dueños"
+        android:protectionLevel="signature" />
+
+    <application
+        android:name=".VeterinariaApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Veterinaria Animales Fantásticos"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.VeterinariaAnimalesFantasticos"
+        tools:targetApi="31">
+
+        <!-- Activity principal - Punto de entrada de la aplicación -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="Veterinaria Animales Fantásticos"
+            android:theme="@style/Theme.VeterinariaAnimalesFantasticos">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Intent Filter para abrir desde enlaces externos -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="veterinaria.example.com"
+                    android:pathPrefix="/home" />
+            </intent-filter>
+        </activity>
+
+        <!-- Activity para listado de mascotas -->
+        <activity
+            android:name=".activities.ListaMascotasActivity"
+            android:exported="true"
+            android:label="Mis Mascotas"
+            android:parentActivityName=".MainActivity">
+            <!-- Intent Filter para compartir datos de tipo mascota -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="veterinaria"
+                    android:host="mascotas" />
+            </intent-filter>
+        </activity>
+
+        <!-- Activity para formulario de mascotas -->
+        <activity
+            android:name=".activities.FormularioMascotaActivity"
+            android:exported="false"
+            android:label="Registrar Mascota"
+            android:parentActivityName=".activities.ListaMascotasActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Activity para listado de dueños -->
+        <activity
+            android:name=".activities.ListaDuenosActivity"
+            android:exported="true"
+            android:label="Dueños Registrados"
+            android:parentActivityName=".MainActivity">
+            <!-- Intent Filter para compartir datos de tipo dueño -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:scheme="veterinaria"
+                    android:host="duenos" />
+            </intent-filter>
+        </activity>
+
+        <!-- Activity para formulario de dueños -->
+        <activity
+            android:name=".activities.FormularioDuenoActivity"
+            android:exported="false"
+            android:label="Registrar Dueño"
+            android:parentActivityName=".activities.ListaDuenosActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Activity para listado de veterinarios -->
+        <activity
+            android:name=".activities.ListaVeterinariosActivity"
+            android:exported="false"
+            android:label="Veterinarios"
+            android:parentActivityName=".MainActivity" />
+
+        <!-- Activity para formulario de veterinarios -->
+        <activity
+            android:name=".activities.FormularioVeterinarioActivity"
+            android:exported="false"
+            android:label="Registrar Veterinario"
+            android:parentActivityName=".activities.ListaVeterinariosActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Servicio de sincronización en segundo plano -->
+        <service
+            android:name=".services.SincronizacionService"
+            android:enabled="true"
+            android:exported="false"
+            android:description="Servicio que sincroniza datos en segundo plano"
+            android:foregroundServiceType="dataSync" />
+
+        <!-- Content Provider para compartir datos con otras aplicaciones -->
+        <provider
+            android:name=".providers.VeterinariaContentProvider"
+            android:authorities="com.example.veterinaria.provider"
+            android:enabled="true"
+            android:exported="true"
+            android:readPermission="com.example.veterinaria.provider.READ_PERMISSION"
+            android:writePermission="com.example.veterinaria.provider.WRITE_PERMISSION"
+            android:grantUriPermissions="true">
+            <!-- Definir rutas específicas que se pueden compartir -->
+            <grant-uri-permission android:pathPattern="/mascotas/.*" />
+            <grant-uri-permission android:pathPattern="/duenos/.*" />
+        </provider>
+
+        <!-- Broadcast Receiver para eventos del sistema -->
+        <receiver
+            android:name=".receivers.SistemaEventosReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <!-- Eventos del sistema -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OKAY" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.AIRPLANE_MODE" />
+            </intent-filter>
+
+            <!-- Eventos personalizados de la aplicación -->
+            <intent-filter>
+                <action android:name="com.example.veterinaria.RECORDATORIO_CITA" />
+                <action android:name="com.example.veterinaria.SINCRONIZAR_DATOS" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

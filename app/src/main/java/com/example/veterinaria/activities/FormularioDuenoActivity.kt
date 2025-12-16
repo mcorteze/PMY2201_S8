@@ -1,0 +1,78 @@
+package com.example.veterinaria.activities
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.lifecycle.ViewModelProvider
+import com.example.veterinaria.VeterinariaApplication
+import com.example.veterinaria.ui.DuenoFormScreen
+import com.example.veterinaria.ui.viewmodel.ViewModelFactory
+import com.example.veterinaria.viewmodel.MainViewModel
+import androidx.navigation.compose.rememberNavController
+
+/**
+ * Activity dedicada para el formulario de registro y edición de dueños.
+ * Permite ingresar y validar datos como nombre, teléfono, correo y dirección.
+ * Incluye validación en tiempo real de campos requeridos.
+ */
+class FormularioDuenoActivity : ComponentActivity() {
+
+    // ViewModel que gestiona la lógica del formulario
+    private lateinit var viewModel: MainViewModel
+
+    // ID del dueño a editar (null si es un registro nuevo)
+    private var duenoId: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Recuperar parámetros enviados desde la Activity anterior
+        duenoId = intent.getStringExtra("DUENO_ID")?.takeIf { it != "0" }
+
+        // Obtener la instancia de la aplicación
+        val application = application as VeterinariaApplication
+
+        // Crear el ViewModelFactory con los repositorios
+        val factory = ViewModelFactory(
+            application.mascotaRepository,
+            application.duenoRepository,
+            application.consultaRepository,
+            application.veterinarioRepository
+        )
+
+        // Inicializar el ViewModel
+        viewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
+
+        // Configurar la interfaz de usuario
+        setContent {
+            MaterialTheme {
+                Surface(
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    val navController = rememberNavController()
+                    DuenoFormScreen(
+                        viewModel,
+                        navController,
+                        duenoId
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * Guarda el dueño y regresa a la lista.
+     */
+    private fun guardarYVolver() {
+        finish()
+    }
+
+    /**
+     * Cancela la operación y vuelve a la pantalla anterior.
+     */
+    private fun cancelar() {
+        finish()
+    }
+}

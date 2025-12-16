@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Colores principales -->
+    <color name="purple_200">#FFD7A86E</color>
+    <color name="purple_500">#FF8E6F3E</color>
+    <color name="purple_700">#FF5C3D23</color>
+
+    <!-- Colores secundarios -->
+    <color name="teal_200">#FF6EBEA0</color>
+    <color name="teal_700">#FF3F7F69</color>
+
+    <!-- Neutros -->
+    <color name="black">#FF0A0A0A</color>
+    <color name="white">#FFFAFAF5</color>
+
+</resources>
