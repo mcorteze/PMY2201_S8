@@ -202,13 +202,10 @@ object IntentHelper {
             appendLine("Información de Dueño")
             appendLine()
             appendLine("Nombre: ${dueno.nombre}")
-            appendLine("Cédula: ${dueno.cedula}")
+            appendLine("RUT: ${dueno.id}")
             appendLine("Teléfono: ${dueno.telefono}")
-            if (dueno.correo.isNotBlank()) {
-                appendLine("Correo: ${dueno.correo}")
-            }
-            if (dueno.direccion.isNotBlank()) {
-                appendLine("Dirección: ${dueno.direccion}")
+            if (dueno.email.isNotBlank()) {
+                appendLine("Email: ${dueno.email}")
             }
             appendLine()
             appendLine("Compartido desde Veterinaria Animales Fantásticos")

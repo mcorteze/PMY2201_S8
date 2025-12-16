@@ -8,6 +8,8 @@ import android.database.MatrixCursor
 import android.net.Uri
 import android.util.Log
 import com.example.veterinaria.VeterinariaApplication
+import com.example.veterinaria.data.repository.MascotaRepositoryImpl
+import com.example.veterinaria.data.repository.DuenoRepositoryImpl
 
 /**
  * Content Provider que permite compartir datos de la veterinaria con otras aplicaciones.
@@ -109,7 +111,8 @@ class VeterinariaContentProvider : ContentProvider() {
             MASCOTAS -> {
                 // Consultar todas las mascotas
                 cursor = MatrixCursor(arrayOf("id", "nombre", "especie", "edad", "dueno_cedula"))
-                val mascotas = obtenerRepositorioMascotas()?.obtenerTodasLasMascotas() ?: emptyList()
+                val repository = obtenerRepositorioMascotas() as? MascotaRepositoryImpl
+                val mascotas = repository?.getAllSync() ?: emptyList()
 
                 mascotas.forEach { mascota ->
                     cursor.addRow(arrayOf(
@@ -129,7 +132,8 @@ class VeterinariaContentProvider : ContentProvider() {
                 cursor = MatrixCursor(arrayOf("id", "nombre", "especie", "edad", "dueno_cedula"))
 
                 if (id != null) {
-                    val mascota = obtenerRepositorioMascotas()?.obtenerTodasLasMascotas()?.find { it.id == id }
+                    val repository = obtenerRepositorioMascotas() as? MascotaRepositoryImpl
+                    val mascota = repository?.getAllSync()?.find { it.id == id }
                     mascota?.let {
                         cursor.addRow(arrayOf(it.id, it.nombre, it.especie, it.edad, it.duenoCedula))
                     }
@@ -139,32 +143,33 @@ class VeterinariaContentProvider : ContentProvider() {
 
             DUENOS -> {
                 // Consultar todos los dueños
-                cursor = MatrixCursor(arrayOf("cedula", "nombre", "telefono", "correo", "direccion"))
-                val duenos = obtenerRepositorioDuenos()?.obtenerTodosLosDuenos() ?: emptyList()
+                cursor = MatrixCursor(arrayOf("id", "nombre", "telefono", "email"))
+                val repository = obtenerRepositorioDuenos() as? DuenoRepositoryImpl
+                val duenos = repository?.getAllSync() ?: emptyList()
 
                 duenos.forEach { dueno ->
                     cursor.addRow(arrayOf(
-                        dueno.cedula,
+                        dueno.id,
                         dueno.nombre,
                         dueno.telefono,
-                        dueno.correo,
-                        dueno.direccion
+                        dueno.email
                     ))
                 }
                 Log.d(TAG, "Retornando ${duenos.size} dueños")
             }
 
             DUENO_CEDULA -> {
-                // Consultar un dueño específico por cédula
-                val cedula = uri.lastPathSegment
-                cursor = MatrixCursor(arrayOf("cedula", "nombre", "telefono", "correo", "direccion"))
+                // Consultar un dueño específico por ID
+                val id = uri.lastPathSegment
+                cursor = MatrixCursor(arrayOf("id", "nombre", "telefono", "email"))
 
-                if (cedula != null) {
-                    val dueno = obtenerRepositorioDuenos()?.obtenerTodosLosDuenos()?.find { it.cedula == cedula }
+                if (id != null) {
+                    val repository = obtenerRepositorioDuenos() as? DuenoRepositoryImpl
+                    val dueno = repository?.getAllSync()?.find { it.id == id }
                     dueno?.let {
-                        cursor.addRow(arrayOf(it.cedula, it.nombre, it.telefono, it.correo, it.direccion))
+                        cursor.addRow(arrayOf(it.id, it.nombre, it.telefono, it.email))
                     }
-                    Log.d(TAG, "Retornando dueño con cédula: $cedula")
+                    Log.d(TAG, "Retornando dueño con ID: $id")
                 }
             }
 

@@ -17,6 +17,12 @@ class MascotaRepositoryImpl : MascotaRepository {
 
     override fun getAll(): Flow<List<Mascota>> = _mascotas.asStateFlow()
 
+    /**
+     * Obtiene todas las mascotas de forma síncrona.
+     * Usado principalmente por el ContentProvider.
+     */
+    fun getAllSync(): List<Mascota> = _mascotas.value
+
     override fun getById(id: Int): Mascota? {
         return _mascotas.value.find { it.id == id }
     }

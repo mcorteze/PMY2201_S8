@@ -105,7 +105,7 @@ class SincronizacionService : Service() {
         val notificacion = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Veterinaria - Sincronización Activa")
             .setContentText("Sincronizando datos en segundo plano...")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
 
@@ -204,7 +204,7 @@ class SincronizacionService : Service() {
         val notificacion = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Veterinaria - Sincronización")
             .setContentText(mensaje)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
 

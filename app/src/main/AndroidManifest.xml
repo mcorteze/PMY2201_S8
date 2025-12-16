@@ -15,6 +15,9 @@
     <!-- Permiso para ejecutar servicios en primer plano -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+    <!-- Permiso para servicios en primer plano de tipo sincronización de datos -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
     <!-- Permiso para mostrar notificaciones (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
@@ -22,14 +25,12 @@
     <permission
         android:name="com.example.veterinaria.provider.READ_PERMISSION"
         android:label="Leer datos de veterinaria"
-        android:description="Permite leer información de mascotas y dueños"
         android:protectionLevel="normal" />
 
     <!-- Permiso personalizado para acceso de escritura al Content Provider -->
     <permission
         android:name="com.example.veterinaria.provider.WRITE_PERMISSION"
         android:label="Escribir datos de veterinaria"
-        android:description="Permite modificar información de mascotas y dueños"
         android:protectionLevel="signature" />
 
     <application
@@ -136,7 +137,6 @@
             android:name=".services.SincronizacionService"
             android:enabled="true"
             android:exported="false"
-            android:description="Servicio que sincroniza datos en segundo plano"
             android:foregroundServiceType="dataSync" />
 
         <!-- Content Provider para compartir datos con otras aplicaciones -->

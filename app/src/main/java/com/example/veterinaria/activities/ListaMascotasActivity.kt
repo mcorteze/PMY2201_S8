@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.lifecycle.ViewModelProvider
+import com.example.veterinaria.MainActivity
 import com.example.veterinaria.VeterinariaApplication
 import com.example.veterinaria.ui.MascotasScreen
 import com.example.veterinaria.ui.viewmodel.ViewModelFactory

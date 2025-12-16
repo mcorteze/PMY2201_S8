@@ -16,6 +16,12 @@ class DuenoRepositoryImpl : DuenoRepository {
 
     override fun getAll(): Flow<List<Dueño>> = _duenos.asStateFlow()
 
+    /**
+     * Obtiene todos los dueños de forma síncrona.
+     * Usado principalmente por el ContentProvider.
+     */
+    fun getAllSync(): List<Dueño> = _duenos.value
+
     override fun getById(id: String): Dueño? {
         return _duenos.value.find { it.id == id }
     }

@@ -304,7 +304,7 @@ class SistemaEventosReceiver : BroadcastReceiver() {
         val notificacion = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle(titulo)
             .setContentText(mensaje)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .build()
